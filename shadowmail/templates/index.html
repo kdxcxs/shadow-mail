@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block content %}
+<div class="flex-1">
+    <div class="overflow-x-auto">
+        <table class="table w-full">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>From</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for msg in msgs %}
+                <tr>
+                    <td>{{ msg.msg_subject }}</td>
+                    <td>{{ msg.msg_from }}</td>
+                    <td>{{ msg.msg_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

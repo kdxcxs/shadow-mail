@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block content %}
+<div class="hero bg-base-200 flex-1">
+    <div class="hero-content text-center">
+        <div class="max-w-md">
+            {% if success %}
+            <h1 class="text-5xl font-bold">Success</h1>
+            <p class="py-6">Exist emails are updated into database.</p>
+            <button onclick="window.location.href='/'" class="btn btn-primary">Get Started</button>
+            {% else %}
+            <h1 class="text-5xl font-bold">Failed</h1>
+            <p class="py-6">The database is already initialized.</p>
+            <button onclick="window.location.href='/'" class="btn btn-primary">Get Started</button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
