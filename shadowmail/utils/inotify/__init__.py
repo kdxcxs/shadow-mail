@@ -7,9 +7,19 @@ __all__ = [
     'watch',
 ]
 
-def watch(path, handler):
-    def _watch(_path):
-        for event in inotify.adapters.InotifyTree(_path).event_gen(yield_nones=False):
+class InotifyThread(Thread):
+    daemon = True
+    def __init__(self, watch_path, handler):
+        Thread.__init__(self)
+        self.watch_path = watch_path
+        self.handler = handler
+
+    def run(self):
+        for event in inotify.adapters.InotifyTree(self.watch_path).event_gen(yield_nones=False):
             (_, type_names, path, filename) = event
-            handler(type_names, path, filename)
-    Thread(target=_watch, args=(path,)).start()
+            self.handler(type_names, path, filename)
+
+def watch(path, handler):
+    t = InotifyThread(path, handler)
+    t.start()
+    return t

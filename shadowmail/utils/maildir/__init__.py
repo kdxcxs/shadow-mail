@@ -11,7 +11,6 @@ class ParsedMessage():
         self.data['subject']  = email_msg['subject']
         self.data['from']     = email_msg['from'].split(' ')[-1]
         self.data['to']       = email_msg['to'].split(' ')[-1]
-        self.data['payload']  = email_msg.get_payload()[0].get_payload(decode = True).decode(email_msg.get_charsets()[1])
     def __getitem__(self, name):
         return self.data[name]
 

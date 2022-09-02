@@ -9,7 +9,7 @@ from shadowmail.utils import inotify, maildir
 
 def create_app():
     app = Flask(__name__)
-    
+
     with app.app_context():
         theme_loader = TemplateLoader(
             os.path.join(app.root_path, "templates"), followlinks=True
@@ -24,9 +24,10 @@ def create_app():
 
         app.register_blueprint(views)
 
-        def handle_mailbox(type_names, path, filename):
-            if('IN_CLOSE_WRITE' in type_names and filename != '' and 'dovecot' not in filename and 'tmp' not in path):
-                msg = maildir.load_from_file(f'{path}/{filename}')
+    def handle_mailbox(type_names, path, filename):
+        if('IN_MOVED_TO' in type_names and '.mail,' in filename):
+            msg = maildir.load_from_file(f'{path}/{filename}')
+            with app.app_context():
                 try:
                     db.session.add(Message(
                         msg_file = msg['filename'],
@@ -37,12 +38,11 @@ def create_app():
                     ))
                     db.session.commit()
                 except IntegrityError as e:
-                    app.logger.error(e)
                     db.session.rollback()
-            else:
-                pass
+        else:
+            pass
 
-        inotify.watch(app.config['MAILDIR'], handle_mailbox)
+    inotify.watch(app.config['MAILDIR'], handle_mailbox)
 
     return app
 
