@@ -1,5 +1,5 @@
 from flask import current_app as app
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from sqlalchemy.exc import IntegrityError
 
 from shadowmail.models import db, Message
@@ -32,3 +32,8 @@ def setup():
             db.session.rollback()
             return render_template('setup.html', success=False)
     return render_template('setup.html', success=True)
+
+@views.route('/preview')
+def preview():
+    msg = Message.query.filter_by(id=int(request.args['id'])).first()
+    return msg.msg_text if msg.msg_html == '' else msg.msg_html

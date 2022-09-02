@@ -12,7 +12,7 @@
             <tbody>
                 {% for msg in msgs %}
                 <tr>
-                    <td>{{ msg.msg_subject }}</td>
+                    <td>{{ msg.msg_subject }}<label for="mail-preview-modal" class="btn modal-button" onclick="document.querySelector('#mail-preview-iframe').src = '/preview?id={{ msg.id }}'">preview</label></td>
                     <td>{{ msg.msg_from_name }}({{ msg.msg_from_addr }})</td>
                     <td>{{ msg.msg_date }}</td>
                 </tr>
@@ -21,4 +21,10 @@
         </table>
     </div>
 </div>
+<input type="checkbox" id="mail-preview-modal" class="modal-toggle" />
+<label for="mail-preview-modal" class="modal cursor-pointer">
+    <label class="modal-box" for="" style="height: 90vh;max-width: 90vw;min-width: 90vw;">
+        <iframe id="mail-preview-iframe" src="http://127.0.0.1:5000/" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+    </label>
+</label>
 {% endblock %}
