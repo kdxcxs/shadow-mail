@@ -9,7 +9,7 @@ views = Blueprint("views", __name__)
 
 @views.route('/')
 def index():
-    msgs = Message.query.all()
+    msgs = Message.query.order_by(Message.msg_date.desc()).all()
     return render_template('index.html', msgs=msgs)
 
 @views.route('/setup')
