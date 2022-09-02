@@ -16,11 +16,15 @@ class Shadow(db.Model):
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    msg_file = db.Column(db.String(120), unique=True, nullable=False)
+    msg_filename = db.Column(db.String(120), unique=True, nullable=False)
     msg_date = db.Column(db.DateTime, unique=False, nullable=False)
-    msg_subject = db.Column(db.String(80), unique=False, nullable=False)
-    msg_from = db.Column(db.String(120), unique=False, nullable=False)
-    msg_to = db.Column(db.String(80), unique=False, nullable=False)
+    msg_subject = db.Column(db.Text, unique=False, nullable=False)
+    msg_from_name = db.Column(db.String(64), unique=False, nullable=False)
+    msg_from_addr = db.Column(db.String(64), unique=False, nullable=False)
+    msg_to_name = db.Column(db.String(64), unique=False, nullable=False)
+    msg_to_addr = db.Column(db.String(64), unique=False, nullable=False)
+    msg_text = db.Column(db.Text, nullable=False)
+    msg_html = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
         return '<Message %r>' % self.username

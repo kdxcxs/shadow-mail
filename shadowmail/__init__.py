@@ -30,11 +30,15 @@ def create_app():
             with app.app_context():
                 try:
                     db.session.add(Message(
-                        msg_file = msg['filename'],
-                        msg_date= msg['date'],
-                        msg_subject= msg['subject'],
-                        msg_from= msg['from'],
-                        msg_to= msg['to'],
+                        msg_filename = msg.filename,
+                        msg_date = msg.parsedmail.date,
+                        msg_subject = msg.parsedmail.subject,
+                        msg_from_name = msg.parsedmail.from_[0][0],
+                        msg_from_addr = msg.parsedmail.from_[0][1],
+                        msg_to_name = msg.parsedmail.to[0][0],
+                        msg_to_addr = msg.parsedmail.to[0][1],
+                        msg_text = '\n'.join(msg.parsedmail.text_plain),
+                        msg_html = '\n'.join(msg.parsedmail.text_html),
                     ))
                     db.session.commit()
                 except IntegrityError as e:

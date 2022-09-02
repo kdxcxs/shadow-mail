@@ -13,7 +13,7 @@
                 {% for msg in msgs %}
                 <tr>
                     <td>{{ msg.msg_subject }}</td>
-                    <td>{{ msg.msg_from }}</td>
+                    <td>{{ msg.msg_from_name }}({{ msg.msg_from_addr }})</td>
                     <td>{{ msg.msg_date }}</td>
                 </tr>
                 {% endfor %}
