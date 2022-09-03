@@ -1,5 +1,18 @@
 {% extends "base.html" %} {% block content %}
-<div class="flex-1">
+<div class="flex flex-col h-full w-full">
+    <div class="stats shadow flex-shrink-0">
+        <div class="stat place-items-center">
+            <div class="stat-figure text-primary">
+                <label for="add-shadow-modal" class="btn modal-button">add</label>
+            </div>
+            <div class="stat-title">Shadows</div>
+            <div class="stat-value">{{ shads }}</div>
+        </div>
+        <div class="stat place-items-center">
+            <div class="stat-title">Mails</div>
+            <div class="stat-value text-secondary">{{ msgs|length }}</div>
+        </div>
+    </div>
     <div class="overflow-x-auto">
         <table class="table w-full">
             <thead>
@@ -7,14 +20,16 @@
                     <th>Subject</th>
                     <th>From</th>
                     <th>Date</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for msg in msgs %}
                 <tr>
-                    <td>{{ msg.msg_subject }}<label for="mail-preview-modal" class="btn modal-button" onclick="document.querySelector('#mail-preview-iframe').src = '/preview?id={{ msg.id }}'">preview</label></td>
+                    <td>{{ msg.msg_subject }}</td>
                     <td>{{ msg.msg_from_name }}({{ msg.msg_from_addr }})</td>
                     <td>{{ msg.msg_date }}</td>
+                    <td><label for="mail-preview-modal" class="btn modal-button" onclick="document.querySelector('#mail-preview-iframe').src = '/preview?id={{ msg.id }}'">↗︎</label></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -25,6 +40,28 @@
 <label for="mail-preview-modal" class="modal cursor-pointer">
     <label class="modal-box" for="" style="height: 90vh;max-width: 90vw;min-width: 90vw;">
         <iframe id="mail-preview-iframe" src="http://127.0.0.1:5000/" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+    </label>
+</label>
+<input type="checkbox" id="add-shadow-modal" class="modal-toggle" />
+<label for="add-shadow-modal" class="modal cursor-pointer">
+    <label class="modal-box" for="">
+        <form action="/shadow" method="post">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Shadow</span>
+                </label>
+                <input name="email" type="text" placeholder="email" class="input input-bordered" />
+            </div>
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Password</span>
+                </label>
+                <input name="password" type="password" placeholder="password" class="input input-bordered" />
+            </div>
+            <div class="form-control mt-6">
+                <button class="btn btn-primary">Add</button>
+            </div>
+        </form>
     </label>
 </label>
 {% endblock %}

@@ -4,12 +4,12 @@
         <div class="max-w-md">
             {% if success %}
             <h1 class="text-5xl font-bold">Success</h1>
-            <p class="py-6">Exist emails are updated into database.</p>
-            <button onclick="window.location.href='/'" class="btn btn-primary">Get Started</button>
+            <p class="py-6">Already created a new shadow<span class="badge">{{ shadow }}</span></p>
+            <button onclick="window.location.href='/'" class="btn btn-primary">Home</button>
             {% else %}
             <h1 class="text-5xl font-bold">Failed</h1>
-            <p class="py-6">The database is already initialized.</p>
-            <button onclick="window.location.href='/'" class="btn btn-primary">Get Started</button>
+            <p class="py-6">Shadow<span class="badge">{{ shadow }}</span>already exist.</p>
+            <button onclick="window.location.href='/'" class="btn btn-primary">Home</button>
             {% endif %}
         </div>
     </div>

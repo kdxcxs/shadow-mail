@@ -2,15 +2,16 @@ from flask import current_app as app
 from flask import Blueprint, render_template, request
 from sqlalchemy.exc import IntegrityError
 
-from shadowmail.models import db, Message
-from shadowmail.utils import maildir
+from shadowmail.models import db, Message, Shadow
+from shadowmail.utils import maildir, shadow_manage
 
 views = Blueprint("views", __name__)
 
 @views.route('/')
 def index():
     msgs = Message.query.order_by(Message.msg_date.desc()).all()
-    return render_template('index.html', msgs=msgs)
+    shads = Shadow.query.count()
+    return render_template('index.html', msgs=msgs, shads=shads)
 
 @views.route('/setup')
 def setup():
@@ -37,3 +38,19 @@ def setup():
 def preview():
     msg = Message.query.filter_by(id=int(request.args['id'])).first()
     return msg.msg_text if msg.msg_html == '' else msg.msg_html
+
+@views.route('/shadow', methods=['post'])
+def shadow():
+    email = request.form['email']
+    password = request.form['password']
+    try:
+        db.session.add(Shadow(
+            email = email,
+            password = password,
+        ))
+        db.session.commit()
+        shadow_manage.add_shadow(email, password)
+    except IntegrityError as e:
+        db.session.rollback()
+        return render_template('shadow.html', success=False, shadow=email)
+    return render_template('shadow.html', success=True, shadow=email)
