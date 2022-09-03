@@ -13,8 +13,26 @@ Currently, Shadow Mail is only for single user scenario, which means it's design
 
 ![preview](./screenshots/preview.png)
 
-## Deploy
+
+## Quick Start
+
+### Deploy
 
 ```bash
 MAILDIR=/var/mail/ POSTFIX_ACCOUNTS=/etc/postfix-accounts.cf flask run
 ```
+
+### Docker
+
+#### build image
+
+```sh
+docker -t shadow-mail .
+```
+#### run container
+
+```sh
+docker run -p 5000:5000 shadow-mail
+```
+You will see the project results on 127.0.0.1:5000
+
