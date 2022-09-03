@@ -1,5 +1,5 @@
 from flask import current_app as app
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, session, redirect
 from sqlalchemy.exc import IntegrityError
 
 from shadowmail.models import db, Message, Shadow
@@ -34,12 +34,24 @@ def setup():
             return render_template('setup.html', success=False)
     return render_template('setup.html', success=True)
 
+@views.route('/auth', methods=['GET', 'POST'])
+def auth():
+    if request.method == 'POST':
+        app.logger.info(app.config['ACCESS_TOKEN'])
+        app.logger.info(request.form['token'])
+        if request.form['token'] == app.config['ACCESS_TOKEN']:
+            session['auth'] = True
+            return redirect('/', 302)
+        else:
+            return render_template('auth.html', wrong=True)
+    return render_template('auth.html')
+
 @views.route('/preview')
 def preview():
     msg = Message.query.filter_by(id=int(request.args['id'])).first()
     return msg.msg_text if msg.msg_html == '' else msg.msg_html
 
-@views.route('/shadow', methods=['post'])
+@views.route('/shadow', methods=['POST'])
 def shadow():
     email = request.form['email']
     password = request.form['password']

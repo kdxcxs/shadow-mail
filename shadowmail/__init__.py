@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, session, request, redirect
 from sqlalchemy.exc import IntegrityError
 from jinja2 import FileSystemLoader
 import os
@@ -23,6 +23,12 @@ def create_app():
         db.create_all()
 
         app.register_blueprint(views)
+
+        @app.before_request
+        def check_token():
+            if request.path != '/auth':
+                if not session.get('auth'):
+                    return redirect('/auth', 302)
 
     def handle_mailbox(type_names, path, filename):
         if('IN_MOVED_TO' in type_names and '.mail,' in filename):
