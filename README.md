@@ -9,7 +9,9 @@ Currently, Shadow Mail is only for single user scenario, which means it's design
 
 ## Screenshot
 
-![screenshot](./screenshot.png)
+![home](./screenshots/home.png)
+
+![preview](./screenshots/preview.png)
 
 ## Deploy
 
