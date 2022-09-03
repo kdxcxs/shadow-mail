@@ -20,7 +20,7 @@ def load_from_file(path):
 
 def get_domain_messages(maildir_path):
     messages = []
-    for shadow in os.listdir(maildir_path): # Each email account is a shadow
+    for shadow in [s for s in os.listdir(maildir_path) if os.path.isdir(f'{maildir_path}/{s}/cur')]: # Each email account is a shadow
         box = mailbox.Maildir(f'{maildir_path}/{shadow}')
         messages.extend([ParsedMail(m[0], mailparser.parse_from_string(m[1].as_string())) for m in box.items()])
     return messages
