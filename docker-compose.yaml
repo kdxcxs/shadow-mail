@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mailserver:
+    image: mailserver/docker-mailserver:latest
+    hostname: mail
+    domainname: example.com
+    ports:
+      - "25:25"    # SMTP  (explicit TLS => STARTTLS)
+      - "143:143"  # IMAP4 (explicit TLS => STARTTLS)
+      - "587:587"  # ESMTP (explicit TLS => STARTTLS)
+      - "993:993"  # IMAP4 (implicit TLS)
+    volumes:
+      - ./docker-data/dms/mail-data/:/var/mail/
+      - ./docker-data/dms/mail-state/:/var/mail-state/
+      - ./docker-data/dms/mail-logs/:/var/log/mail/
+      - ./docker-data/dms/config/:/tmp/docker-mailserver/
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      # Open Source anti-spam platform giving system administrators a filter to classify email and block spam
+      - ENABLE_SPAMASSASSIN=1
+      # Spam messages will be delivered to the inbox and tagged as spam
+      - SPAMASSASSIN_SPAM_TO_INBOX=1
+      # anti virus, needs a lot of memory
+      - ENABLE_CLAMAV=1
+      # update firewall rules to reject the IP addresses for a specified amount of time, if open, it needs NET_ADMIN capability
+      - ENABLE_FAIL2BAN=1
+      # Postgrey is a Postfix policy server implementing greylisting
+      - ENABLE_POSTGREY=0
+      - ENABLE_SASLAUTHD=0
+      # consolidate all states into a single directory (/var/mail-state) to allow persistence using docker volumes.
+      - ONE_DIR=1
+    # cap_add:
+    #   - NET_ADMIN
+    restart: always
+  
+  shadowmail:
+    build: .
+    ports:
+      - 80:80
+    volumes:
+      - ./docker-data/dms/mail-data:/var/mail/
+      - ./docker-data/dms/config:/etc/mailserver/
+    environment:
+      - MAILDIR=/var/mail
+      - POSTFIX_ACCOUNTS=/etc/mailserver/postfix-accounts.cf
+      - ACCESS_TOKEN=YOUR_TOKEN_HERE
